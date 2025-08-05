@@ -44,7 +44,6 @@ let Calculator  = () => {
             <button onClick={() => handleClick('3')}>3</button>
             <button onClick={() => handleClick('0')}>0</button>
             <button onClick={handleEqual} className='equal'>=</button>
-
         </div>
     </div>
   )
