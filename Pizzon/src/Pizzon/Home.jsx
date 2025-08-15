@@ -6,177 +6,6 @@ import { FaPinterestP } from "react-icons/fa";
 import { FaTwitter } from "react-icons/fa";
 import { FaInstagram } from "react-icons/fa6";
 
-function TinySlider({ items, perView = { base: 1, md: 2, lg: 3 }, gap = 16 }) {
-  const ref = React.useRef(null)
-  const [pv, setPv] = React.useState(perView.base)
-
-  React.useEffect(() => {
-    const calc = () => {
-      const w = window.innerWidth
-      if (perView.lg && w >= 1024) return setPv(perView.lg)
-      if (perView.md && w >= 768) return setPv(perView.md)
-      setPv(perView.base)
-    }
-    calc()
-    window.addEventListener("resize", calc)
-    return () => window.removeEventListener("resize", calc)
-  }, [perView])
-
-  const baseCount = items.length
-  const triple = React.useMemo(() => [...items, ...items, ...items], [items])
-
-  const stepRef = React.useRef(0)   // one card width + gap
-  const trackRef = React.useRef(0)  // length of one original set
-  const isWrappingRef = React.useRef(false)
-
-  React.useEffect(() => {
-    const el = ref.current
-    if (!el || baseCount === 0) return
-    const measure = () => {
-      const w = el.clientWidth
-      const one = w / Math.max(1, pv)
-      stepRef.current = one + gap
-      trackRef.current = baseCount * stepRef.current
-      // center to middle set, keep relative offset
-      const rel = ((el.scrollLeft % trackRef.current) + trackRef.current) % trackRef.current
-      const prev = el.style.scrollBehavior
-      el.style.scrollBehavior = "auto"
-      el.scrollLeft = trackRef.current + rel
-      el.style.scrollBehavior = prev
-    }
-    measure()
-    const ro = new ResizeObserver(measure)
-    ro.observe(el)
-    return () => ro.disconnect()
-  }, [pv, gap, baseCount])
-
-  // Safe wrap (no smooth during wrap to avoid vibration)
-  const wrapIfNeeded = () => {
-    const el = ref.current
-    if (!el || isWrappingRef.current) return
-    const track = trackRef.current
-    if (!track) return
-
-    const x = el.scrollLeft
-    const min = track * 0.5
-    const max = track * 1.5
-    if (x < min || x > max) {
-      isWrappingRef.current = true
-      const prev = el.style.scrollBehavior
-      el.style.scrollBehavior = "auto"
-      el.scrollLeft = x < min ? x + track : x - track
-      el.style.scrollBehavior = prev
-      requestAnimationFrame(() => (isWrappingRef.current = false))
-    }
-  }
-
-  // Click step = smooth; wrap afterwards
-  const step = (dir) => {
-    let el = ref.current
-    if (!el) return
-    let target = el.scrollLeft + dir * stepRef.current
-    el.scrollTo({ left: target, behavior: "smooth" })
-    window.setTimeout(wrapIfNeeded, 300)
-  }
-
-  // Press & hold continuous
-  let timer = React.useRef(null)
-  let startHold = (dir) => {
-    if (timer.current) return
-    timer.current = window.setInterval(() => {
-      const el = ref.current
-      if (!el) return
-      el.scrollLeft += dir * 6 // speed
-      wrapIfNeeded()
-    }, 16)
-  }
-  let stopHold = () => {
-    if (timer.current) {
-      clearInterval(timer.current)
-      timer.current = null
-    }
-  }
-
-  return (
-    <div className="pz-slider">
-      <div className="pz-viewport">
-        <div
-          ref={ref}
-          className="pz-track"
-          style={{ gap: `${gap}px` }}
-          onScroll={wrapIfNeeded}
-        >
-          {triple.map((it, i) => (
-            <div
-              key={`${it.id}-${i}`}
-              className="pz-card"
-              style={{
-                width: `calc(${100 / Math.max(1, pv)}% - ${
-                  (gap * (Math.max(1, pv) - 1)) / Math.max(1, pv)
-                }px)`,
-              }}
-            >
-              <div className="pz-card-inner">
-                {/* Circular figure like reference */}
-                <div className="pz-figure">
-                  <img src={it.imageUrl || "/placeholder.svg"} alt={it.title || "pizza"} className="pz-img" />
-                </div>
-
-                {/* Title + Price */}
-                <div className="pz-row">
-                  <h3 className="pz-title">{it.title}</h3>
-                  {it.price && <span className="pz-price">{it.price}</span>}
-                </div>
-
-                {/* Stars */}
-                <div className="pz-stars">★ ★ ★ ★ ★</div>
-
-                {/* Description */}
-                {it.description && <p className="pz-desc">{it.description}</p>}
-
-                {/* Button */}
-                <button type="button" className="pz-btn">
-                  <span className="pz-cart" aria-hidden="true">🛒</span>
-                  ORDER NOW
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Arrows */}
-      <button
-        className="pz-arrow pz-left"
-        aria-label="Prev"
-        onClick={() => step(-1)}
-        onMouseDown={() => startHold(-1)}
-        onMouseUp={stopHold}
-        onMouseLeave={stopHold}
-        onTouchStart={(e) => { e.preventDefault(); startHold(-1) }}
-        onTouchEnd={stopHold}
-        onTouchCancel={stopHold}
-      >
-        {"<"}
-      </button>
-      <button
-        className="pz-arrow pz-right"
-        aria-label="Next"
-        onClick={() => step(1)}
-        onMouseDown={() => startHold(1)}
-        onMouseUp={stopHold}
-        onMouseLeave={stopHold}
-        onTouchStart={(e) => { e.preventDefault(); startHold(1) }}
-        onTouchEnd={stopHold}
-        onTouchCancel={stopHold}
-      >
-        {">"}
-      </button>
-    </div>
-  )
-}
-
-/* ================= Benner (unchanged) ================= */
 function Benner() {
   return (
     <div className="banner">
@@ -222,39 +51,7 @@ function Benner() {
   )
 }
 
-/* ========== Main: Slider OUTSIDE container (full section width) ========== */
 function Main() {
-  let items = [
-    {
-      id: "1",
-      imageUrl: "https://themes.templatescoder.com/pizzon/html/demo/1-2/01-Modern/images/pizza-3.png",
-      title: "Shrimp pizza",
-      price: "$35.00",
-      description: "All the Lorem Ipsum generators on the Internet tend to repeat",
-    },
-    {
-      id: "2",
-      imageUrl: "https://themes.templatescoder.com/pizzon/html/demo/1-2/01-Modern/images/pizza-1.png",
-      title: "Cheese pizza",
-      price: "$25.00",
-      description: "A classic favorite with melted mozzarella and cheddar",
-    },
-    {
-      id: "3",
-      imageUrl: "https://themes.templatescoder.com/pizzon/html/demo/1-2/01-Modern/images/pizza-2.png",
-      title: "Seafood pizza",
-      price: "$65.00",
-      description: "Fresh seafood medley on a crispy crust",
-    },
-    {
-      id: "4",
-      imageUrl: "https://themes.templatescoder.com/pizzon/html/demo/1-2/01-Modern/images/pizza-4.png",
-      title: "Margherita",
-      price: "$20.00",
-      description: "Tomatoes, basil and mozzarella — simple and perfect",
-    },
-  ]
-
   return (
     <div className="main">
       <section>
@@ -282,8 +79,7 @@ function Main() {
         </div>
       </section>
 
-      <section className="Menu py-5">
-        {/* Title in container (as before) */}
+      <section className="Menu py-5 mt-5">
         <div className="container">
           <div className="menu-title position-relative mb-5">
             <div className="d-flex align-items-center">
@@ -293,10 +89,63 @@ function Main() {
             <h2 className="fw-bold">Browse Our Menu</h2>
             <img src="https://pizza-shop-ruby.vercel.app/images/tamato.png" alt="" className="menu-img1" />
           </div>
-        </div>
 
-        {/* SLIDER OUTSIDE CONTAINER (full section width) */}
-        <TinySlider items={items} perView={{ base: 1, md: 2, lg: 3 }} gap={16} />
+          <div className="menu-inner">
+            <div className="row">
+              <div className="col-md-4">
+                <div className="menu-item border p-4 rounded-5">
+                  <div className="menu-img">
+                    <img src="https://themes.templatescoder.com/pizzon/html/demo/1-2/01-Modern/images/pizza-2.png" alt=""  className="menu-img1 img-fluid mb-3"/>
+                  </div>
+                  <div className="menu-contant">
+                    <div className="d-flex justify-content-between mb-2">
+                      <h4>Seafood pizza</h4>
+                      <span className="fw-semibold fs-4 text-danger">$65.00</span>
+                    </div>
+                    <h5 className="text-warning mb-3">★ ★ ★ ★ ★</h5>
+                    <p className="text-secondary fw-semibold">All the Lorem Ipsum generators on to Internet tend to repeat </p>
+                    <a href="javascript:void(0)" className="btn btn-warning p-2 px-4 rounded-pill text-white fw-semibold fs-5 text-uppercase"><FiShoppingCart className="me-3"/>order now</a>
+                  </div>
+                </div>
+              </div>
+
+              <div className="col-md-4">
+                <div className="menu-item border p-4 rounded-5">
+                  <div className="menu-img">
+                    <img src="https://themes.templatescoder.com/pizzon/html/demo/1-2/01-Modern/images/pizza-3.png" alt=""  className="menu-img1 img-fluid mb-3"/>
+                  </div>
+                  <div className="menu-contant">
+                    <div className="d-flex justify-content-between mb-2">
+                      <h4>Cheese pizza</h4>
+                      <span className="fw-semibold fs-4 text-danger">$45.00</span>
+                    </div>
+                    <h5 className="text-warning mb-3">★ ★ ★ ★ ★</h5>
+                    <p className="text-secondary fw-semibold">All the Lorem Ipsum generators on to Internet tend to repeat </p>
+                    <a href="javascript:void(0)" className="btn btn-warning p-2 px-4 rounded-pill text-white fw-semibold fs-5 text-uppercase"><FiShoppingCart className="me-3"/>order now</a>
+                  </div>
+                </div>
+              </div>
+
+              <div className="col-md-4">
+                <div className="menu-item border p-4 rounded-5">
+                  <div className="menu-img">
+                    <img src="https://themes.templatescoder.com/pizzon/html/demo/1-2/01-Modern/images/pizza-1.png" alt=""  className="menu-img1 img-fluid mb-3"/>
+                  </div>
+                  <div className="menu-contant">
+                    <div className="d-flex justify-content-between mb-2">
+                      <h4>Shrimp pizza</h4>
+                      <span className="fw-semibold fs-4 text-danger">$35.00</span>
+                    </div>
+                    <h5 className="text-warning mb-3">★ ★ ★ ★ ★</h5>
+                    <p className="text-secondary fw-semibold">All the Lorem Ipsum generators on to Internet tend to repeat </p>
+                    <a href="javascript:void(0)" className="btn btn-warning p-2 px-4 rounded-pill text-white fw-semibold fs-5 text-uppercase"><FiShoppingCart className="me-3"/>order now</a>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
       </section>
 
       <section className="our-story mt-5">
