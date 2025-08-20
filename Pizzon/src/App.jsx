@@ -6,8 +6,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Benner, { Footer, Main } from './Pizzon/Home';
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
     <div>
       <Benner />

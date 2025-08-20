@@ -512,7 +512,7 @@ function Main() {
 
 function Footer() {
   return (
-      <footer className="footer">
+    <footer className="footer">
       <div className="footer-main">
         <div className="footer-col">
           <h4>INFORMATION</h4>
@@ -569,7 +569,7 @@ function Footer() {
         <span>|</span>
         <span>Terms & Conditions</span>
       </div>
-    </footer>
+    </footer>
   )
 }
 
