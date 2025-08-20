@@ -1,134 +1,110 @@
 import React, { useState } from "react";
 
-export default function MovieCollector() {
+function MovieCollector() {
   let [movies, setMovies] = useState([]);
-  let [formData, setFormData] = useState({
+  let [movie, setMovie] = useState({
     title: "",
-    rating: "",
     director: "",
     year: "",
-    genre: ""
+    genre: "",
+    rating: "1",
   });
   let [editIndex, setEditIndex] = useState(null);
 
-  let handleChange = (e) => {
+  function handleChange(e) {
     let { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
+    setMovie({ ...movie, [name]: value });
+  }
 
-  let handleSubmit = (e) => {
+  function handleSubmit(e) {
     e.preventDefault();
-    if (
-      !formData.title.trim() ||
-      !formData.rating.trim() ||
-      !formData.director.trim() ||
-      !formData.year.trim() ||
-      !formData.genre.trim()
-    ) {
-      return;
-    }
 
     if (editIndex !== null) {
-      let updatedMovies = movies.map((m, i) =>
-        i === editIndex ? formData : m
-      );
+      let updatedMovies = [...movies];
+      updatedMovies[editIndex] = movie;
       setMovies(updatedMovies);
       setEditIndex(null);
     } else {
-      setMovies([...movies, formData]);
+      setMovies([...movies, movie]);
     }
-    setFormData({
-      title: "",
-      rating: "",
-      director: "",
-      year: "",
-      genre: ""
-    });
-  };
 
-  let handleDelete = (index) => {
-    setMovies(movies.filter((_, i) => i !== index));
-  };
+    setMovie({ title: "", director: "", year: "", genre: "", rating: "1" });
+  }
 
-  let handleEdit = (index) => {
-    setFormData(movies[index]);
+  function handleEdit(index) {
+    setMovie(movies[index]);
     setEditIndex(index);
-  };
+  }
+
+  function handleDelete(index) {
+    let updatedMovies = [...movies];
+    updatedMovies.splice(index, 1);
+    setMovies(updatedMovies);
+  }
 
   return (
-    <div className="movie-collector">
-      <form onSubmit={handleSubmit} className="movie-form">
+    <div className="collector">
+      <h1 className="text-center mb-4 text-white-50">🎬 Movie Collector App</h1>
+      <form onSubmit={handleSubmit} className="form">
         <input
           type="text"
           name="title"
-          placeholder="🎥 Movie Title"
-          value={formData.title}
+          value={movie.title}
           onChange={handleChange}
+          placeholder="Movie Title"
+          required
         />
-        <select name="rating" value={formData.rating} onChange={handleChange}>
-          <option value="">⭐ Select Rating</option>
-          {Array.from({ length: 10 }, (_, i) => (
-            <option key={i + 1} value={i + 1}>
-              {i + 1} / 10
-            </option>
-          ))}
-        </select>
         <input
           type="text"
           name="director"
-          placeholder="🎬 Director Name"
-          value={formData.director}
+          value={movie.director}
           onChange={handleChange}
+          placeholder="Director"
+          required
         />
         <input
           type="number"
           name="year"
-          placeholder="📅 Release Year"
-          value={formData.year}
+          value={movie.year}
           onChange={handleChange}
+          placeholder="Release Year"
+          required
         />
-        <select name="genre" value={formData.genre} onChange={handleChange}>
-          <option value="">🎭 Select Genre</option>
+        <select name="genre" value={movie.genre} onChange={handleChange} required>
+          <option value="">Select Genre</option>
           <option value="Action">Action</option>
           <option value="Comedy">Comedy</option>
           <option value="Romantic">Romantic</option>
-          <option value="Drama">Drama</option>
           <option value="Horror">Horror</option>
-          <option value="Sci-Fi">Sci-Fi</option>
+          <option value="Drama">Drama</option>
         </select>
-        <button type="submit">{editIndex !== null ? "Update 🎯" : "Add ➕"}</button>
+        <select name="rating" value={movie.rating} onChange={handleChange} required>
+          <option value="">Select Rating</option>
+          {[1,2,3,4,5,6,7,8,9,10].map((num) => (
+            <option key={num} value={num}>{num}</option>
+          ))}
+        </select>
+        <button type="submit">{editIndex !== null ? "Update" : "Add Movie"}</button>
       </form>
 
-      <div className="table-wrapper">
-        <table className="movie-table">
-          <thead>
-            <tr>
-              <th>Title</th>
-              <th>Rating</th>
-              <th>Director</th>
-              <th>Year</th>
-              <th>Genre</th>
-              <th>🎬 Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {movies.map((movie, index) => (
-              <tr key={index}>
-                <td>{movie.title}</td>
-                <td>⭐ {movie.rating}/10</td>
-                <td>{movie.director}</td>
-                <td>{movie.year}</td>
-                <td>{movie.genre}</td>
-                <td>
-                  <button className="edit" onClick={() => handleEdit(index)}>✏️</button>
-                  <button className="delete" onClick={() => handleDelete(index)}>🗑️</button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        {movies.length === 0 && <p className="empty-msg">No movies added yet 🎞️</p>}
+      <div className="movie-list">
+        {movies.length === 0 ? (
+          <p>No movies added yet.</p>
+        ) : (
+          movies.map((m, index) => (
+            <div key={index} className="movie-card">
+              <h3>{m.title} ({m.year})</h3>
+              <p><b>Director:</b> {m.director}</p>
+              <p><b>Genre:</b> {m.genre}</p>
+              <p><b>Rating:</b> {m.rating}/10</p>
+              <button onClick={() => handleEdit(index)}>Edit</button>
+              <button onClick={() => handleDelete(index)}>Delete</button>
+            </div>
+          ))
+        )}
       </div>
     </div>
   );
 }
+
+export default MovieCollector;
