@@ -1,0 +1,157 @@
+body {
+  background: linear-gradient(135deg, #2c3e50, #4ca1af);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #fff;
+  margin: 0;
+  padding: 0;
+}
+
+/* Navbar */
+.navbar {
+  background: #111;
+  padding: 1rem 2rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+}
+
+.navbar-brand {
+  color: #ff4757 !important;
+  font-weight: 700;
+  font-size: 1.5rem;
+}
+
+.nav-link {
+  color: #f1f1f1 !important;
+  margin: 0 10px;
+  transition: 0.3s;
+}
+
+.nav-link:hover {
+  color: #ff4757 !important;
+}
+
+/* Container */
+.container {
+  padding: 30px;
+}
+
+/* Movie List Cards */
+.movie-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+.movie-card {
+  background: #1e272e;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform 0.3s, box-shadow 0.3s;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+}
+
+.movie-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+}
+
+.movie-poster {
+  height: 180px;
+  background: #2f3640;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  color: #888;
+}
+
+.movie-card-body {
+  padding: 15px;
+}
+
+.movie-title {
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: #fff;
+}
+
+.movie-director {
+  font-size: 0.9rem;
+  color: #bbb;
+}
+
+.movie-rating {
+  margin-top: 10px;
+  color: gold;
+  font-weight: bold;
+}
+
+/* Action Buttons */
+.btn-custom {
+  display: inline-block;
+  margin: 5px 3px;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.btn-view {
+  background: #1abc9c;
+  color: white;
+}
+.btn-view:hover {
+  background: #16a085;
+}
+
+.btn-edit {
+  background: #f39c12;
+  color: white;
+}
+.btn-edit:hover {
+  background: #d35400;
+}
+
+.btn-delete {
+  background: #e74c3c;
+  color: white;
+}
+.btn-delete:hover {
+  background: #c0392b;
+}
+
+/* Movie Detail Page */
+.movie-detail-card {
+  background: #1e272e;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+}
+
+.movie-detail-poster {
+  width: 200px;
+  height: 280px;
+  background: #2f3640;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  color: #888;
+}
+
+.movie-detail-info h2 {
+  margin: 0;
+  font-size: 2rem;
+  color: #fff;
+}
+
+.movie-detail-info p {
+  font-size: 1.1rem;
+  margin: 10px 0;
+  color: #ddd;
+}
