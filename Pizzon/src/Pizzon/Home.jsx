@@ -1,4 +1,3 @@
-import React from "react"
 import { HiOutlineArrowLongRight } from "react-icons/hi2";
 import { FiShoppingCart } from "react-icons/fi";
 import { FaFacebookF } from "react-icons/fa6";
@@ -500,7 +499,6 @@ function Main() {
                     </div>
                   </div>
                 </div>
-
               </div>
             </div>
           </div>
