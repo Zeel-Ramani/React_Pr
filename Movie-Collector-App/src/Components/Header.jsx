@@ -34,7 +34,7 @@ let Header = () => {
             }}
           >
             <FaFilm
-              style={{
+              style={{ 
                 fontSize: "2rem",
                 color: "#00e1ff",
                 transition: "transform 0.4s cubic-bezier(.68,-0.55,.27,1.55)",
@@ -52,7 +52,7 @@ let Header = () => {
           </Link>
           <Link
             to="/add"
-            className="btn dark-neon-btn rounded-pill px-4 py-2"
+            className="btn dark-neon-btn rounded-pill px-4 py-2"                                
             style={{
               fontWeight: 600,
               background: "linear-gradient(90deg,#232458 70%,#00e1ff 100%)",

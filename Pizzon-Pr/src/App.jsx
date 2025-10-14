@@ -1,6 +1,6 @@
 import './App.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Benner, { Footer, Main } from './Pizzon/Home';
+import Benner, { Main, Footer } from './Pizzon/Home';
 
 function App() {
   <div>

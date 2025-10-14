@@ -116,11 +116,11 @@ function Main() {
                   <div className="menu-contant">
                     <div className="d-flex justify-content-between mb-2">
                       <h4>Cheese pizza</h4>
-                      <span className="fw-semibold fs-4 text-danger">$45.00</span>
+                      <span className="fw-semibold fs-4 text-danger">$45.00</span>      
                     </div>
                     <h5 className="text-warning mb-3">★ ★ ★ ★ ★</h5>
                     <p className="text-secondary fw-semibold">All the Lorem Ipsum generators on to Internet tend to repeat </p>
-                    <a href="javascript:void(0)" className="btn btn-warning p-2 px-4 rounded-pill text-white fw-semibold fs-5 text-uppercase"><FiShoppingCart className="me-3"/>order now</a>
+                    <a href="javascript:void(0)" className="btn btn-warning p-2 px-4 rounded-pill text-white fw-semibold fs-5 text-uppercase"><FiShoppingCart className ="me-3"/>order now</a>
                   </div>
                 </div>
               </div>
@@ -572,5 +572,4 @@ function Footer() {
 }
 
 export default Benner;
-export { Main };
-export { Footer };
+export { Main, Footer };
