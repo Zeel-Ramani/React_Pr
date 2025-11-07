@@ -138,7 +138,6 @@ const mockProducts = [
   }
 ];
 
-// Get products from localStorage or use mock data
 const getProductsFromStorage = () => {
   const stored = localStorage.getItem('amazonProducts');
   return stored ? JSON.parse(stored) : mockProducts;
