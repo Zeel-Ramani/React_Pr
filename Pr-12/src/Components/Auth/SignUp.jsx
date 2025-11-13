@@ -1,31 +1,31 @@
 import React, { useState, useEffect } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
-import { Link, useNavigate, useLocation } from 'react-router-dom'
-import { login } from '../../Services/actions/authActions'
+import { Link, useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { register } from '../../Services/actions/authActions'
 import amazonLogo from '../../assets/amazon-logo.webp'
 import './Auth.css'
 
-const SignIn = () => {
+const SignUp = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const location = useLocation()
 
-  const [credentials, setCredentials] = useState({
+  const [userData, setUserData] = useState({
+    name: '',
     email: '',
-    password: ''
+    password: '',
+    confirmPassword: ''
   })
 
-  const { userInfo, loading, error } = useSelector(state => state.auth)
+  const { userInfo, error } = useSelector(state => state.auth)
 
   useEffect(() => {
     if (userInfo) {
-      const redirectPath = location.state?.from || '/'
-      navigate(redirectPath)
+      navigate('/')
     }
-  }, [userInfo, navigate, location])
+  }, [userInfo, navigate])
 
   const handleInputChange = (e) => {
-    setCredentials(prev => ({
+    setUserData(prev => ({
       ...prev,
       [e.target.name]: e.target.value
     }))
@@ -33,7 +33,13 @@ const SignIn = () => {
 
   const handleFormSubmit = (e) => {
     e.preventDefault()
-    dispatch(login(credentials.email, credentials.password))
+
+    if (userData.password !== userData.confirmPassword) {
+      alert("Passwords do not match!")
+      return
+    }
+
+    dispatch(register(userData.name, userData.email, userData.password))
   }
 
   return (
@@ -45,7 +51,7 @@ const SignIn = () => {
       </div>
 
       <div className="signin-box">
-        <h2 className="signin-title">Sign in</h2>
+        <h2 className="signin-title">Create account</h2>
 
         {error && (
           <div className="alert alert-danger" role="alert">
@@ -54,59 +60,66 @@ const SignIn = () => {
         )}
 
         <form onSubmit={handleFormSubmit}>
+          <label className="fw-bold mb-1">Your name</label>
+          <input
+            type="text"
+            name="name"
+            value={userData.name}
+            onChange={handleInputChange}
+            required
+            className="form-control mb-3"
+          />
+
           <label className="fw-bold mb-1">Email or mobile phone number</label>
           <input
             type="email"
             name="email"
-            value={credentials.email}
+            value={userData.email}
             onChange={handleInputChange}
             required
             className="form-control mb-3"
-            disabled={loading}
           />
 
           <label className="fw-bold mb-1">Password</label>
           <input
             type="password"
             name="password"
-            value={credentials.password}
+            placeholder="At least 6 characters"
+            value={userData.password}
             onChange={handleInputChange}
             required
             className="form-control mb-2"
-            disabled={loading}
           />
-          <Link to="#" className="small text-amazon-link d-block mb-3">Forgot Password?</Link>
+          <small className="text-muted small d-block mb-3">
+            Passwords must be at least 6 characters.
+          </small>
 
-          <button type="submit" className="amazon-btn w-100" disabled={loading}>
-            {loading ? (
-              <>
-                <div className="spinner-border spinner-border-sm me-2" role="status">
-                  <span className="visually-hidden">Loading...</span>
-                </div>
-                Signing in...
-              </>
-            ) : (
-              'Continue'
-            )}
+          <label className="fw-bold mb-1">Re-enter password</label>
+          <input
+            type="password"
+            name="confirmPassword"
+            value={userData.confirmPassword}
+            onChange={handleInputChange}
+            required
+            className="form-control mb-4"
+          />
+
+          <button type="submit" className="amazon-btn w-100">
+            Create your Amazon account
           </button>
         </form>
 
         <p className="text-muted small mt-3">
-          By continuing, you agree to Amazon's
+          By creating an account, you agree to Amazon's
           <Link to="#" className="text-amazon-link"> Conditions of Use </Link>
           and
           <Link to="#" className="text-amazon-link"> Privacy Notice</Link>.
         </p>
 
         <hr />
-        <Link to="#" className="small text-amazon-link">Need help?</Link>
-      </div>
-
-      <div className="new-account text-center mt-4">
-        <span className="small text-muted">New to Amazon?</span>
-        <Link to="/register" className="btn btn-outline amazon-outline-btn mt-2">
-          Create your Amazon account
-        </Link>
+        <p className="text-center small">
+          Already have an account? <Link to="/login" className="text-amazon-link">Sign in</Link>
+        </p>
       </div>
 
       <footer className="signin-footer">
@@ -121,4 +134,4 @@ const SignIn = () => {
   )
 }
 
-export default SignIn;
+export default SignUp

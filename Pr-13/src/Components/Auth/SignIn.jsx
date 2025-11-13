@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
-import { login } from '../../Services/actions/authActions'
+import { login, loginWithGoogle } from '../../Services/actions/authActions'
 import amazonLogo from '../../assets/amazon-logo.webp'
 import './Auth.css'
 
@@ -34,6 +34,10 @@ const SignIn = () => {
   const handleFormSubmit = (e) => {
     e.preventDefault()
     dispatch(login(credentials.email, credentials.password))
+  }
+
+  const handleGoogleSignIn = () => {
+    dispatch(loginWithGoogle())
   }
 
   return (
@@ -78,18 +82,28 @@ const SignIn = () => {
           <Link to="#" className="small text-amazon-link d-block mb-3">Forgot Password?</Link>
 
           <button type="submit" className="amazon-btn w-100" disabled={loading}>
-            {loading ? (
-              <>
-                <div className="spinner-border spinner-border-sm me-2" role="status">
-                  <span className="visually-hidden">Loading...</span>
-                </div>
-                Signing in...
-              </>
-            ) : (
-              'Continue'
-            )}
+            {loading ? 'Signing in...' : 'Continue'}
           </button>
         </form>
+
+        <div className="divider">
+          <span>or</span>
+        </div>
+
+        <div className="d-grid mt-2">
+          <button
+            className="google-signin-btn w-100"
+            onClick={handleGoogleSignIn}
+            disabled={loading}
+          >
+            <img
+              src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+              alt="Google Logo"
+              className="google-icon"
+            />
+            Continue with Google
+          </button>
+        </div>
 
         <p className="text-muted small mt-3">
           By continuing, you agree to Amazon's
@@ -121,4 +135,4 @@ const SignIn = () => {
   )
 }
 
-export default SignIn;
+export default SignIn
